@@ -5,9 +5,12 @@ import java.io.FileReader;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Scanner;
 
 public class AccountingLedger {
     private static ArrayList<Transaction> ledger = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         loadLedger();
@@ -22,6 +25,25 @@ public class AccountingLedger {
                 "L) View Ledger\n" +
                 "X) Exit"
         );
+
+        String input = scanner.nextLine().toUpperCase();
+
+        switch (input) {
+            case "D" :
+                System.out.println("Deposit not implemented yet!");
+                break;
+            case "P":
+                System.out.println("Payment not implemented yet!");
+                break;
+            case "L":
+                System.out.println("Ledger Screen not implemented yet!");
+                break;
+            case "X":
+                System.out.println("Exit not implemented yet!");
+                break;
+            default:
+                System.out.println("Invalid Option");
+        }
     }
 
     static void loadLedger() {
