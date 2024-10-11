@@ -11,10 +11,13 @@ import java.util.Scanner;
 public class AccountingLedger {
     private static ArrayList<Transaction> ledger = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
+    private static boolean running = true;
 
     public static void main(String[] args) {
         loadLedger();
-        homeScreen();
+        while (running) {
+            homeScreen();
+        }
     }
 
     static void homeScreen() {
@@ -39,7 +42,8 @@ public class AccountingLedger {
                 System.out.println("Ledger Screen not implemented yet!");
                 break;
             case "X":
-                System.out.println("Exit not implemented yet!");
+                System.out.println("Thank you for using our app!");
+                running = false;
                 break;
             default:
                 System.out.println("Invalid Option");
