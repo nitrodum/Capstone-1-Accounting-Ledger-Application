@@ -24,36 +24,62 @@ public class AccountingLedger {
     }
 
     static void homeScreen() {
-        System.out.println(LocalDate.now());
-        System.out.println(LocalTime.now());
-        testLedger();
-        System.out.println(
-                "*******************************************************************************\n" +
-                "Welcome to your account!\n" +
-                "Please enter the letter corresponding to the command you would like to perform.\n" +
-                "D) Add Deposit\n" +
-                "P) Make Payment\n" +
-                "L) View Ledger\n" +
-                "X) Exit\n" +
-                "*******************************************************************************"
-        );
-
-        String input = scanner.nextLine().toUpperCase();
+        String input = enterInput(
+                        "*******************************************************************************\n" +
+                        "Welcome to your account!\n" +
+                        "Please enter the letter corresponding to the command you would like to perform.\n" +
+                        "D) Add Deposit\n" +
+                        "P) Make Payment\n" +
+                        "L) View Ledger\n" +
+                        "X) Exit\n" +
+                        "*******************************************************************************").toUpperCase();
 
         switch (input) {
-            case "D" :
+            case "D":
                 addTransaction(true);
                 break;
             case "P":
                 addTransaction(false);
                 break;
             case "L":
-                System.out.println("Ledger Screen not implemented yet!");
+                ledgerScreen();
                 break;
             case "X":
                 System.out.println("Thank you for using our app!");
                 running = false;
                 break;
+            default:
+                System.out.println("Invalid Option");
+        }
+    }
+
+    static void ledgerScreen() {
+        String input = enterInput("*******************************************************************************\n" +
+                "Welcome to your ledger!\n" +
+                "Please enter the letter corresponding to the command you would like to perform.\n" +
+                "A) Display All Transactions\n" +
+                "D) Display All Deposits\n" +
+                "P) Display All Payments\n" +
+                "R) View Reports\n" +
+                "H) Return to Home Screen\n" +
+                "*******************************************************************************\n").toUpperCase();
+
+        switch (input) {
+            case "A":
+                System.out.println("Display All has not been implemented yet!");
+                break;
+            case "D":
+                System.out.println("Display Deposits has not been implemented yet!");
+                break;
+            case "P":
+                System.out.println("Display Payments has not been implemented yet!");
+                break;
+            case "R":
+                System.out.println("Reports Screen has not been implemented yet!");
+                break;
+            case "H":
+                System.out.println("Returning to Home Screen!");
+                return;
             default:
                 System.out.println("Invalid Option");
         }
@@ -67,12 +93,12 @@ public class AccountingLedger {
             action = "payment";
         }
 
-        System.out.println("Please enter the details for the " + action + "\n" +
-                "Description: \n");
-        String description = scanner.nextLine();
+        String message = "Please enter the details for the " + action + "\n" +
+                "Description: \n";
 
-        System.out.println("Vendor name: ");
-        String vendor = scanner.nextLine();
+        String description = enterInput(message);
+
+        String vendor = enterInput("Vendor name: ");
 
         System.out.println("Amount: ");
         float amount = scanner.nextFloat();
@@ -113,6 +139,11 @@ public class AccountingLedger {
             System.out.println("Error reading file!");
             e.printStackTrace();
         }
+    }
+
+    static String enterInput(String message) {
+        System.out.println(message);
+        return scanner.nextLine();
     }
 
     static void testLedger() {
