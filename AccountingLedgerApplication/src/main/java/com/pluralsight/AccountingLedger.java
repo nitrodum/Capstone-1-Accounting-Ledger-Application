@@ -74,10 +74,12 @@ public class AccountingLedger {
                 displayLedger(ledger);
                 break;
             case "D":
-                System.out.println("Display Deposits has not been implemented yet!");
+                ArrayList<Transaction> deposits = filterTransactions(true);
+                displayLedger(deposits);
                 break;
             case "P":
-                System.out.println("Display Payments has not been implemented yet!");
+                ArrayList<Transaction> payments = filterTransactions(false);
+                displayLedger(payments);
                 break;
             case "R":
                 System.out.println("Reports Screen has not been implemented yet!");
@@ -94,6 +96,16 @@ public class AccountingLedger {
         for (Transaction t : toDisplay) {
             System.out.println("Date: " + t.getDate() + " Time: " + t.getTime().format(formatter) + " Description: " + t.getDescription() + " Vendor: " + t.getVendor() + " Amount: " + t.getAmount());
         }
+    }
+
+    static ArrayList<Transaction> filterTransactions(boolean deposit) {
+        ArrayList<Transaction> filteredTransactions = new ArrayList<>();
+            for (Transaction t : ledger) {
+                if ((t.getAmount() > 0 && deposit) || (t.getAmount() < 0 && !deposit)) {
+                    filteredTransactions.add(t);
+                }
+            }
+            return filteredTransactions;
     }
 
     static void addTransaction(boolean deposit) {
