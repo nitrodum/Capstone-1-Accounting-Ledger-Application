@@ -16,6 +16,7 @@ public class AccountingLedger {
     private static Scanner scanner = new Scanner(System.in);
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static boolean running = true;
+    private static boolean runLedger;
 
     public static void main(String[] args) {
         loadLedger();
@@ -44,7 +45,10 @@ public class AccountingLedger {
                 addTransaction(false);
                 break;
             case "L":
-                ledgerScreen();
+                runLedger = true;
+                while (runLedger) {
+                    ledgerScreen();
+                }
                 break;
             case "X":
                 System.out.println("Thank you for using our app!");
@@ -86,7 +90,8 @@ public class AccountingLedger {
                 break;
             case "H":
                 System.out.println("Returning to Home Screen!");
-                return;
+                runLedger = false;
+                break;
             default:
                 System.out.println("Invalid Option");
         }
