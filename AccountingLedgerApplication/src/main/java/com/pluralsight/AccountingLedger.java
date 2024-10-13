@@ -8,11 +8,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class AccountingLedger {
     private static ArrayList<Transaction> ledger = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static boolean running = true;
 
     public static void main(String[] args) {
@@ -54,7 +56,10 @@ public class AccountingLedger {
     }
 
     static void ledgerScreen() {
-        String input = enterInput("*******************************************************************************\n" +
+        ledger.sort(Comparator.comparing(Transaction::getDate).thenComparing(Transaction::getTime).reversed());
+
+        String input = enterInput(
+                "*******************************************************************************\n" +
                 "Welcome to your ledger!\n" +
                 "Please enter the letter corresponding to the command you would like to perform.\n" +
                 "A) Display All Transactions\n" +
@@ -66,7 +71,7 @@ public class AccountingLedger {
 
         switch (input) {
             case "A":
-                System.out.println("Display All has not been implemented yet!");
+                displayLedger(ledger);
                 break;
             case "D":
                 System.out.println("Display Deposits has not been implemented yet!");
@@ -82,6 +87,12 @@ public class AccountingLedger {
                 return;
             default:
                 System.out.println("Invalid Option");
+        }
+    }
+
+    static void displayLedger(ArrayList<Transaction> toDisplay) {
+        for (Transaction t : toDisplay) {
+            System.out.println("Date: " + t.getDate() + " Time: " + t.getTime().format(formatter) + " Description: " + t.getDescription() + " Vendor: " + t.getVendor() + " Amount: " + t.getAmount());
         }
     }
 
@@ -110,8 +121,6 @@ public class AccountingLedger {
 
         Transaction t = new Transaction(LocalDate.now(), LocalTime.now(), description, vendor, amount);
         ledger.add(t);
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
         try {
             FileWriter writer = new FileWriter("transactions.csv", true);
