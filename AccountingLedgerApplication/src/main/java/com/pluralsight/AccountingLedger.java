@@ -45,6 +45,7 @@ public class AccountingLedger {
                 addTransaction(false);
                 break;
             case "L":
+                ledger.sort(Comparator.comparing(Transaction::getDate).thenComparing(Transaction::getTime).reversed());
                 runLedger = true;
                 while (runLedger) {
                     ledgerScreen();
@@ -60,8 +61,6 @@ public class AccountingLedger {
     }
 
     static void ledgerScreen() {
-        ledger.sort(Comparator.comparing(Transaction::getDate).thenComparing(Transaction::getTime).reversed());
-
         String input = enterInput(
                 "*******************************************************************************\n" +
                 "Welcome to your ledger!\n" +
