@@ -105,16 +105,19 @@ public class AccountingLedger {
                 "*******************************************************************************\n" +
                         "Welcome to your reports!\n" +
                         "Please enter the number corresponding to the command you would like to perform.\n" +
-                        "A) Display All Transactions\n" +
-                        "D) Display All Deposits\n" +
-                        "P) Display All Payments\n" +
-                        "R) View Reports\n" +
-                        "H) Return to Home Screen\n" +
+                        "1) Month To Date\n" +
+                        "2) Previous Month\n" +
+                        "3) Year To Date\n" +
+                        "4) Previous Year\n" +
+                        "5) Search by Vendor\n" +
+                        "0) Return to Ledger\n" +
                         "*******************************************************************************\n");
 
         switch (input) {
             case "1":
-                System.out.println("Month to Date has not been implemented yet!");
+                LocalDate monthToDate = LocalDate.now().minusMonths(1);
+                ArrayList<Transaction> monthToDateReport = filterToDate(monthToDate);
+                displayLedger(monthToDateReport);
                 break;
             case "2":
                 System.out.println("Previous Month has not been implemented yet!");
@@ -135,6 +138,16 @@ public class AccountingLedger {
             default:
                 System.out.println("Invalid Option");
         }
+    }
+
+    static ArrayList<Transaction> filterToDate(LocalDate limit) {
+        ArrayList<Transaction> filteredToDate = new ArrayList<>();
+        for (Transaction t : ledger) {
+            if (t.getDate().isAfter(limit)) {
+                filteredToDate.add(t);
+            }
+        }
+        return filteredToDate;
     }
 
     static void displayLedger(ArrayList<Transaction> toDisplay) {
