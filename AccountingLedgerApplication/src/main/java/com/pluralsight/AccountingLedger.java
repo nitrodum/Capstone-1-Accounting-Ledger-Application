@@ -30,7 +30,7 @@ public class AccountingLedger {
     // Menus
     static void homeScreen() {
         String input = enterInput(
-                        "*******************************************************************************\n" +
+                "*******************************************************************************\n" +
                         "Welcome to your account!\n" +
                         "Please enter the letter corresponding to the command you would like to perform.\n" +
                         "D) Add Deposit\n" +
@@ -66,14 +66,14 @@ public class AccountingLedger {
     static void ledgerScreen() {
         String input = enterInput(
                 "*******************************************************************************\n" +
-                "Welcome to your ledger!\n" +
-                "Please enter the letter corresponding to the command you would like to perform.\n" +
-                "A) Display All Transactions\n" +
-                "D) Display All Deposits\n" +
-                "P) Display All Payments\n" +
-                "R) View Reports\n" +
-                "H) Return to Home Screen\n" +
-                "*******************************************************************************\n").toUpperCase();
+                        "Welcome to your ledger!\n" +
+                        "Please enter the letter corresponding to the command you would like to perform.\n" +
+                        "A) Display All Transactions\n" +
+                        "D) Display All Deposits\n" +
+                        "P) Display All Payments\n" +
+                        "R) View Reports\n" +
+                        "H) Return to Home Screen\n" +
+                        "*******************************************************************************\n").toUpperCase();
 
         switch (input) {
             case "A":
@@ -89,10 +89,10 @@ public class AccountingLedger {
                 break;
             case "R":
                 runReport = true;
-               while (runReport) {
-                   reportScreen();
-               }
-               break;
+                while (runReport) {
+                    reportScreen();
+                }
+                break;
             case "H":
                 System.out.println("Returning to Home Screen!");
                 runLedger = false;
@@ -226,15 +226,22 @@ public class AccountingLedger {
 
     static void filterPrevious(boolean filterPreviousYear) {
         int previousMonth = LocalDate.now().minusMonths(1).getMonthValue();
+
+        // Adjust yearComparison to previous year if filterPreviousYear is true or if the current month is January
         int yearComparison;
-        if (filterPreviousYear) {
-            yearComparison = LocalDate.now().getYear()-1;
+        if (filterPreviousYear || previousMonth == 12) {
+            yearComparison = LocalDate.now().getYear() - 1;
         } else {
             yearComparison = LocalDate.now().getYear();
         }
+
         ArrayList<Transaction> filteredPreviousMonth = new ArrayList<>();
+
+        // Filter the transactions based on the adjusted year and month
         for (Transaction t : ledger) {
             if (t.getDate().getYear() == yearComparison) {
+                // If filtering by previous year, include all transactions from that year
+                // Otherwise, only include transactions from the previous month
                 if (filterPreviousYear || (t.getDate().getMonthValue() == previousMonth)) {
                     filteredPreviousMonth.add(t);
                 }
@@ -283,22 +290,22 @@ public class AccountingLedger {
 
         String endDate = enterInput("Enter the end date");
         if (!endDate.isEmpty()) {
-                custom = filterToDate(LocalDate.parse(endDate), ledger);
+            custom = filterToDate(LocalDate.parse(endDate), ledger);
         }
 
         String description = enterInput("Enter the description");
         if (!description.isEmpty()) {
-                custom = filterDescription(description, ledger);
+            custom = filterDescription(description, ledger);
         }
 
         String vendor = enterInput("Enter the vendor name");
         if (!vendor.isEmpty()) {
-                custom = filterVendor(vendor, ledger);
+            custom = filterVendor(vendor, ledger);
         }
 
         String amount = enterInput("Enter the amount");
         if (!amount.isEmpty()) {
-                custom = filterAmount(Float.parseFloat(amount), ledger);
+            custom = filterAmount(Float.parseFloat(amount), ledger);
         }
 
         return custom;
