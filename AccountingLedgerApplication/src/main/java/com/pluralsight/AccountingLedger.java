@@ -75,15 +75,15 @@ public class AccountingLedger {
 
         switch (input) {
             case "A":
-                displayLedger(ledger);
+                display(ledger);
                 break;
             case "D":
                 ArrayList<Transaction> deposits = filterTransactions(true);
-                displayLedger(deposits);
+                display(deposits);
                 break;
             case "P":
                 ArrayList<Transaction> payments = filterTransactions(false);
-                displayLedger(payments);
+                display(payments);
                 break;
             case "R":
                 runReport = true;
@@ -117,7 +117,7 @@ public class AccountingLedger {
             case "1":
                 LocalDate monthToDate = LocalDate.now().minusMonths(1);
                 ArrayList<Transaction> monthToDateReport = filterToDate(monthToDate);
-                displayLedger(monthToDateReport);
+                display(monthToDateReport);
                 break;
             case "2":
                 filterPrevious(false);
@@ -125,13 +125,14 @@ public class AccountingLedger {
             case "3":
                 LocalDate yearToDate = LocalDate.now().minusYears(1);
                 ArrayList<Transaction> yearToDateReport = filterToDate(yearToDate);
-                displayLedger(yearToDateReport);
+                display(yearToDateReport);
                 break;
             case "4":
                 filterPrevious(true);
                 break;
             case "5":
-                System.out.println("Search by vendor has not been implemented yet!");
+                ArrayList<Transaction> filteredByVendor = filterVendor();
+                display(filteredByVendor);
                 break;
             case "0":
                 System.out.println("Returning to Ledger!");
@@ -168,10 +169,21 @@ public class AccountingLedger {
                 }
             }
         }
-        displayLedger(filteredPreviousMonth);
+        display(filteredPreviousMonth);
     }
 
-    static void displayLedger(ArrayList<Transaction> toDisplay) {
+    static ArrayList<Transaction> filterVendor() {
+        String vendor = enterInput("Enter the vendor name that you would like to search for.\n");
+        ArrayList<Transaction> filteredByVendor = new ArrayList<>();
+        for (Transaction t : ledger) {
+            if (t.getVendor().equalsIgnoreCase(vendor)) {
+                filteredByVendor.add(t);
+            }
+        }
+        return filteredByVendor;
+    }
+
+    static void display(ArrayList<Transaction> toDisplay) {
         for (Transaction t : toDisplay) {
             System.out.println("Date: " + t.getDate() + " Time: " + t.getTime().format(formatter) + " Description: " + t.getDescription() + " Vendor: " + t.getVendor() + " Amount: " + t.getAmount());
         }
