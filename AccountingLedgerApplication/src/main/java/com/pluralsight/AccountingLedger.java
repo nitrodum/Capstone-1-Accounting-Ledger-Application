@@ -27,6 +27,7 @@ public class AccountingLedger {
         scanner.close();
     }
 
+    // Menus
     static void homeScreen() {
         String input = enterInput(
                         "*******************************************************************************\n" +
@@ -55,10 +56,11 @@ public class AccountingLedger {
             case "X":
                 System.out.println("Thank you for using our app!");
                 running = false;
-                break;
+                return;
             default:
                 System.out.println("Invalid Option");
         }
+        buffer();
     }
 
     static void ledgerScreen() {
@@ -94,10 +96,11 @@ public class AccountingLedger {
             case "H":
                 System.out.println("Returning to Home Screen!");
                 runLedger = false;
-                break;
+                return;
             default:
                 System.out.println("Invalid Option");
         }
+        buffer();
     }
 
     static void reportScreen() {
@@ -137,12 +140,64 @@ public class AccountingLedger {
             case "0":
                 System.out.println("Returning to Ledger!");
                 runReport = false;
-                break;
+                return;
             default:
                 System.out.println("Invalid Option");
         }
+        buffer();
     }
 
+    // Home Screen Methods
+    static void addTransaction(boolean deposit) {
+        String action;
+        if (deposit) {
+            action = "deposit";
+        } else {
+            action = "payment";
+        }
+
+        String message = "Please enter the details for the " + action + "\n" +
+                "Description: \n";
+
+        String description = enterInput(message);
+
+        String vendor = enterInput("Vendor name: ");
+
+        System.out.println("Amount: ");
+        float amount = scanner.nextFloat();
+        scanner.nextLine();
+
+        if (!deposit) {
+            amount *= -1;
+        }
+
+        Transaction t = new Transaction(LocalDate.now(), LocalTime.now(), description, vendor, amount);
+        ledger.add(t);
+
+        try {
+            FileWriter writer = new FileWriter("transactions.csv", true);
+            BufferedWriter bufferedWriter = new BufferedWriter(writer);
+            bufferedWriter.newLine();
+            bufferedWriter.write(LocalDate.now().toString() + "|" + LocalTime.now().format(formatter) + "|" + description + "|" + vendor + "|" + amount);
+            bufferedWriter.close();
+        } catch (Exception e) {
+            System.out.println("Error writing to file!");
+            e.printStackTrace();
+        }
+    }
+
+    // Ledger Methods
+    static ArrayList<Transaction> filterTransactions(boolean deposit) {
+        ArrayList<Transaction> filteredTransactions = new ArrayList<>();
+        for (Transaction t : ledger) {
+            if ((t.getAmount() > 0 && deposit) || (t.getAmount() < 0 && !deposit)) {
+                filteredTransactions.add(t);
+            }
+        }
+        return filteredTransactions;
+    }
+
+    // Report Methods
     static ArrayList<Transaction> filterToDate(LocalDate limit) {
         ArrayList<Transaction> filteredToDate = new ArrayList<>();
         for (Transaction t : ledger) {
@@ -183,58 +238,16 @@ public class AccountingLedger {
         return filteredByVendor;
     }
 
+    // Helper Methods
     static void display(ArrayList<Transaction> toDisplay) {
         for (Transaction t : toDisplay) {
             System.out.println("Date: " + t.getDate() + " Time: " + t.getTime().format(formatter) + " Description: " + t.getDescription() + " Vendor: " + t.getVendor() + " Amount: " + t.getAmount());
         }
     }
 
-    static ArrayList<Transaction> filterTransactions(boolean deposit) {
-        ArrayList<Transaction> filteredTransactions = new ArrayList<>();
-            for (Transaction t : ledger) {
-                if ((t.getAmount() > 0 && deposit) || (t.getAmount() < 0 && !deposit)) {
-                    filteredTransactions.add(t);
-                }
-            }
-            return filteredTransactions;
-    }
+    static void buffer() {
+        enterInput("Enter any button to continue");
 
-    static void addTransaction(boolean deposit) {
-        String action;
-        if (deposit) {
-            action = "deposit";
-        } else {
-            action = "payment";
-        }
-
-        String message = "Please enter the details for the " + action + "\n" +
-                "Description: \n";
-
-        String description = enterInput(message);
-
-        String vendor = enterInput("Vendor name: ");
-
-        System.out.println("Amount: ");
-        float amount = scanner.nextFloat();
-        scanner.nextLine();
-
-        if (!deposit) {
-            amount *= -1;
-        }
-
-        Transaction t = new Transaction(LocalDate.now(), LocalTime.now(), description, vendor, amount);
-        ledger.add(t);
-
-        try {
-            FileWriter writer = new FileWriter("transactions.csv", true);
-            BufferedWriter bufferedWriter = new BufferedWriter(writer);
-            bufferedWriter.newLine();
-            bufferedWriter.write(LocalDate.now().toString() + "|" + LocalTime.now().format(formatter) + "|" + description + "|" + vendor + "|" + amount);
-            bufferedWriter.close();
-        } catch (Exception e) {
-            System.out.println("Error writing to file!");
-            e.printStackTrace();
-        }
     }
 
     static void loadLedger() {
