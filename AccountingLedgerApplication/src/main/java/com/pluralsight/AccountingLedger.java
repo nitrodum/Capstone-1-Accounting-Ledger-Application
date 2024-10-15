@@ -17,6 +17,7 @@ public class AccountingLedger {
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static boolean running = true;
     private static boolean runLedger;
+    private static boolean runReport;
 
     public static void main(String[] args) {
         loadLedger();
@@ -85,11 +86,51 @@ public class AccountingLedger {
                 displayLedger(payments);
                 break;
             case "R":
-                System.out.println("Reports Screen has not been implemented yet!");
-                break;
+                runReport = true;
+               while (runReport) {
+                   reportScreen();
+               }
+               break;
             case "H":
                 System.out.println("Returning to Home Screen!");
                 runLedger = false;
+                break;
+            default:
+                System.out.println("Invalid Option");
+        }
+    }
+
+    static void reportScreen() {
+        String input = enterInput(
+                "*******************************************************************************\n" +
+                        "Welcome to your reports!\n" +
+                        "Please enter the number corresponding to the command you would like to perform.\n" +
+                        "A) Display All Transactions\n" +
+                        "D) Display All Deposits\n" +
+                        "P) Display All Payments\n" +
+                        "R) View Reports\n" +
+                        "H) Return to Home Screen\n" +
+                        "*******************************************************************************\n");
+
+        switch (input) {
+            case "1":
+                System.out.println("Month to Date has not been implemented yet!");
+                break;
+            case "2":
+                System.out.println("Previous Month has not been implemented yet!");
+                break;
+            case "3":
+                System.out.println("Year to Date has not been implemented yet!");
+                break;
+            case "4":
+                System.out.println("Previous Year has not been implemented yet!");
+                break;
+            case "5":
+                System.out.println("Search by vendor has not been implemented yet!");
+                break;
+            case "0":
+                System.out.println("Returning to Ledger!");
+                runReport = false;
                 break;
             default:
                 System.out.println("Invalid Option");
