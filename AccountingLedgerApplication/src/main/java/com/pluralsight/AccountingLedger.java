@@ -123,7 +123,9 @@ public class AccountingLedger {
                 System.out.println("Previous Month has not been implemented yet!");
                 break;
             case "3":
-                System.out.println("Year to Date has not been implemented yet!");
+                LocalDate yearToDate = LocalDate.now().minusYears(1);
+                ArrayList<Transaction> yearToDateReport = filterToDate(yearToDate);
+                displayLedger(yearToDateReport);
                 break;
             case "4":
                 System.out.println("Previous Year has not been implemented yet!");
