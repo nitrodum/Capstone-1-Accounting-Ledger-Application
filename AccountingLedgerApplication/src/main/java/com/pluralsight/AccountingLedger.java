@@ -120,7 +120,7 @@ public class AccountingLedger {
                 displayLedger(monthToDateReport);
                 break;
             case "2":
-                System.out.println("Previous Month has not been implemented yet!");
+                filterPrevious(false);
                 break;
             case "3":
                 LocalDate yearToDate = LocalDate.now().minusYears(1);
@@ -128,7 +128,7 @@ public class AccountingLedger {
                 displayLedger(yearToDateReport);
                 break;
             case "4":
-                System.out.println("Previous Year has not been implemented yet!");
+                filterPrevious(true);
                 break;
             case "5":
                 System.out.println("Search by vendor has not been implemented yet!");
@@ -150,6 +150,25 @@ public class AccountingLedger {
             }
         }
         return filteredToDate;
+    }
+
+    static void filterPrevious(boolean filterPreviousYear) {
+        int previousMonth = LocalDate.now().minusMonths(1).getMonthValue();
+        int yearComparison;
+        if (filterPreviousYear) {
+            yearComparison = LocalDate.now().getYear()-1;
+        } else {
+            yearComparison = LocalDate.now().getYear();
+        }
+        ArrayList<Transaction> filteredPreviousMonth = new ArrayList<>();
+        for (Transaction t : ledger) {
+            if (t.getDate().getYear() == yearComparison) {
+                if (filterPreviousYear || (t.getDate().getMonthValue() == previousMonth)) {
+                    filteredPreviousMonth.add(t);
+                }
+            }
+        }
+        displayLedger(filteredPreviousMonth);
     }
 
     static void displayLedger(ArrayList<Transaction> toDisplay) {
