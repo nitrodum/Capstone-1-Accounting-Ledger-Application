@@ -113,13 +113,14 @@ public class AccountingLedger {
                         "3) Year To Date\n" +
                         "4) Previous Year\n" +
                         "5) Search by Vendor\n" +
+                        "6) Custom Search\n" +
                         "0) Return to Ledger\n" +
                         "*******************************************************************************\n");
 
         switch (input) {
             case "1":
                 LocalDate monthToDate = LocalDate.now().minusMonths(1);
-                ArrayList<Transaction> monthToDateReport = filterToDate(monthToDate);
+                ArrayList<Transaction> monthToDateReport = filterSinceDate(monthToDate);
                 display(monthToDateReport);
                 break;
             case "2":
@@ -127,15 +128,20 @@ public class AccountingLedger {
                 break;
             case "3":
                 LocalDate yearToDate = LocalDate.now().minusYears(1);
-                ArrayList<Transaction> yearToDateReport = filterToDate(yearToDate);
+                ArrayList<Transaction> yearToDateReport = filterSinceDate(yearToDate);
                 display(yearToDateReport);
                 break;
             case "4":
                 filterPrevious(true);
                 break;
             case "5":
-                ArrayList<Transaction> filteredByVendor = filterVendor();
+                String vendor = enterInput("Enter the vendor name that you would like to search for.\n");
+                ArrayList<Transaction> filteredByVendor = filterVendor(vendor, ledger);
                 display(filteredByVendor);
+                break;
+            case "6":
+                ArrayList<Transaction> search = customSearch();
+                display(search);
                 break;
             case "0":
                 System.out.println("Returning to Ledger!");
@@ -198,10 +204,20 @@ public class AccountingLedger {
     }
 
     // Report Methods
-    static ArrayList<Transaction> filterToDate(LocalDate limit) {
+    static ArrayList<Transaction> filterSinceDate(LocalDate limit) {
         ArrayList<Transaction> filteredToDate = new ArrayList<>();
         for (Transaction t : ledger) {
             if (t.getDate().isAfter(limit)) {
+                filteredToDate.add(t);
+            }
+        }
+        return filteredToDate;
+    }
+
+    static ArrayList<Transaction> filterToDate(LocalDate limit, ArrayList<Transaction> toFilter) {
+        ArrayList<Transaction> filteredToDate = new ArrayList<>();
+        for (Transaction t : toFilter) {
+            if (t.getDate().isBefore(limit)) {
                 filteredToDate.add(t);
             }
         }
@@ -227,15 +243,65 @@ public class AccountingLedger {
         display(filteredPreviousMonth);
     }
 
-    static ArrayList<Transaction> filterVendor() {
-        String vendor = enterInput("Enter the vendor name that you would like to search for.\n");
+    static ArrayList<Transaction> filterVendor(String vendor, ArrayList<Transaction> toFilter) {
         ArrayList<Transaction> filteredByVendor = new ArrayList<>();
-        for (Transaction t : ledger) {
+        for (Transaction t : toFilter) {
             if (t.getVendor().equalsIgnoreCase(vendor)) {
                 filteredByVendor.add(t);
             }
         }
         return filteredByVendor;
+    }
+
+    static ArrayList<Transaction> filterDescription(String description, ArrayList<Transaction> toFilter) {
+        ArrayList<Transaction> filteredByDescription = new ArrayList<>();
+        for (Transaction t : toFilter) {
+            if (t.getVendor().equalsIgnoreCase(description)) {
+                filteredByDescription.add(t);
+            }
+        }
+        return filteredByDescription;
+    }
+
+    static ArrayList<Transaction> filterAmount(float amount, ArrayList<Transaction> toFilter) {
+        ArrayList<Transaction> filteredByAmount = new ArrayList<>();
+        for (Transaction t : toFilter) {
+            if (t.getAmount() == amount) {
+                filteredByAmount.add(t);
+            }
+        }
+        return filteredByAmount;
+    }
+
+    static ArrayList<Transaction> customSearch() {
+        ArrayList<Transaction> custom = new ArrayList<>(ledger);
+
+        String startDate = enterInput("Enter the start date");
+        if (!startDate.isEmpty()) {
+            custom = filterSinceDate(LocalDate.parse(startDate));
+        }
+
+        String endDate = enterInput("Enter the end date");
+        if (!endDate.isEmpty()) {
+                custom = filterToDate(LocalDate.parse(endDate), ledger);
+        }
+
+        String description = enterInput("Enter the description");
+        if (!description.isEmpty()) {
+                custom = filterDescription(description, ledger);
+        }
+
+        String vendor = enterInput("Enter the vendor name");
+        if (!vendor.isEmpty()) {
+                custom = filterVendor(vendor, ledger);
+        }
+
+        String amount = enterInput("Enter the amount");
+        if (!amount.isEmpty()) {
+                custom = filterAmount(Float.parseFloat(amount), ledger);
+        }
+
+        return custom;
     }
 
     // Helper Methods
