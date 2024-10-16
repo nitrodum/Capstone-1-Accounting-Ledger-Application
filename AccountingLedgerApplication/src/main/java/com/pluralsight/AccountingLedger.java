@@ -172,7 +172,9 @@ public class AccountingLedger {
         LocalTime time = LocalTime.now();
 
         if (answer.equalsIgnoreCase("yes")) {
-            date = validateDate("Please enter a date in format (YYYY-MM-DD): ");
+            do {
+                date = validateDate("Please enter a date in format (YYYY-MM-DD): ");
+            } while (date != null);
             time = validateTime("Please enter a time in format (HH:MM:SS): ");
         }
 
@@ -216,11 +218,15 @@ public class AccountingLedger {
 
     static LocalDate validateDate(String message) {
         boolean valid = false;
-        LocalDate date = LocalDate.now();
+        LocalDate date = null;
 
         while (!valid) {
+            String input = enterInput(message);
+            if (input.isEmpty()) {
+                return null;
+            }
             try {
-                date = LocalDate.parse(enterInput(message));
+                date = LocalDate.parse(input);
                 valid = true;
             } catch (DateTimeParseException e) {
                 System.out.println("Invalid input. Please enter a valid date in format (YYYY-MM-DD)");
@@ -231,7 +237,7 @@ public class AccountingLedger {
 
     static LocalTime validateTime(String message) {
         boolean valid = false;
-        LocalTime time = LocalTime.now();
+        LocalTime time = null;
 
         while (!valid) {
             try {
@@ -335,30 +341,43 @@ public class AccountingLedger {
     static ArrayList<Transaction> customSearch() {
         ArrayList<Transaction> custom = new ArrayList<>(ledger);
 
-        String startDate = enterInput("Enter the start date");
-        if (!startDate.isEmpty()) {
-            custom = filterSinceDate(LocalDate.parse(startDate));
+        LocalDate startDate = validateDate("Enter the start date:");
+        if (startDate != null) {
+            custom = filterSinceDate(startDate);
         }
 
-        String endDate = enterInput("Enter the end date");
-        if (!endDate.isEmpty()) {
-            custom = filterToDate(LocalDate.parse(endDate), ledger);
+        LocalDate endDate = validateDate("Enter the end date:");
+        if (endDate != null) {
+            custom = filterToDate(endDate, ledger);
         }
 
-        String description = enterInput("Enter the description");
+        String description = enterInput("Enter the description:");
         if (!description.isEmpty()) {
             custom = filterDescription(description, ledger);
         }
 
-        String vendor = enterInput("Enter the vendor name");
+        String vendor = enterInput("Enter the vendor name:");
         if (!vendor.isEmpty()) {
             custom = filterVendor(vendor, ledger);
         }
 
-        String amount = enterInput("Enter the amount");
-        if (!amount.isEmpty()) {
-            custom = filterAmount(Float.parseFloat(amount), ledger);
-        }
+        boolean valid = false;
+        String amount;
+
+       while (!valid) {
+           amount = enterInput("Enter the amount:");
+           if (amount.isEmpty()) {
+               valid = true;
+           } else {
+               try {
+                   float parsedAmount = Float.parseFloat(amount);
+                   custom = filterAmount(parsedAmount, ledger);
+                   valid = true;
+               } catch (NumberFormatException e) {
+                   System.out.println("Invalid amount. Please enter a valid number.");
+               }
+           }
+       }
 
         return custom;
     }
