@@ -32,14 +32,14 @@ public class AccountingLedger {
     // Menus
     static void homeScreen() {
         String input = enterInput(
-                "*******************************************************************************\n" +
+                "------------------------------------------------------------------------------------------------------------------------\n" +
                         "Welcome to your account!\n" +
                         "Please enter the letter corresponding to the command you would like to perform.\n" +
                         "D) Add Deposit\n" +
                         "P) Make Payment\n" +
                         "L) View Ledger\n" +
                         "X) Exit\n" +
-                        "*******************************************************************************").toUpperCase();
+                        "------------------------------------------------------------------------------------------------------------------------").toUpperCase();
 
         switch (input) {
             case "D":
@@ -67,7 +67,7 @@ public class AccountingLedger {
 
     static void ledgerScreen() {
         String input = enterInput(
-                "*******************************************************************************\n" +
+                "------------------------------------------------------------------------------------------------------------------------\n" +
                         "Welcome to your ledger!\n" +
                         "Please enter the letter corresponding to the command you would like to perform.\n" +
                         "A) Display All Transactions\n" +
@@ -75,15 +75,23 @@ public class AccountingLedger {
                         "P) Display All Payments\n" +
                         "R) View Reports\n" +
                         "H) Return to Home Screen\n" +
-                        "*******************************************************************************\n").toUpperCase();
+                        "------------------------------------------------------------------------------------------------------------------------\n").toUpperCase();
 
         switch (input) {
             case "A":
                 display(ledger);
+                String drawLedger = enterInput("Would you like to visualize this data? (yes/no)");
+                if (drawLedger.equalsIgnoreCase("yes")) {
+                    Graph.drawGraph(ledger);
+                }
                 break;
             case "D":
                 ArrayList<Transaction> deposits = filterTransactions(true);
                 display(deposits);
+                String drawDeposits = enterInput("Would you like to visualize this data? (yes/no)");
+                if (drawDeposits.equalsIgnoreCase("yes")) {
+                    Graph.drawGraph(deposits);
+                }
                 break;
             case "P":
                 ArrayList<Transaction> payments = filterTransactions(false);
@@ -107,7 +115,7 @@ public class AccountingLedger {
 
     static void reportScreen() {
         String input = enterInput(
-                "*******************************************************************************\n" +
+                "------------------------------------------------------------------------------------------------------------------------\n" +
                         "Welcome to your reports!\n" +
                         "Please enter the number corresponding to the command you would like to perform.\n" +
                         "1) Month To Date\n" +
@@ -117,7 +125,7 @@ public class AccountingLedger {
                         "5) Search by Vendor\n" +
                         "6) Custom Search\n" +
                         "0) Return to Ledger\n" +
-                        "*******************************************************************************\n");
+                        "------------------------------------------------------------------------------------------------------------------------\n");
 
         switch (input) {
             case "1":
@@ -174,7 +182,7 @@ public class AccountingLedger {
         if (answer.equalsIgnoreCase("yes")) {
             do {
                 date = validateDate("Please enter a date in format (YYYY-MM-DD): ");
-            } while (date != null);
+            } while (date == null);
             time = validateTime("Please enter a time in format (HH:MM:SS): ");
         }
 
