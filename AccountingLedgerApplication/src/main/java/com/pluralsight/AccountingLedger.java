@@ -7,8 +7,10 @@ import java.io.FileWriter;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class AccountingLedger {
@@ -162,34 +164,84 @@ public class AccountingLedger {
             action = "payment";
         }
 
-        String message = "Please enter the details for the " + action + "\n" +
-                "Description: \n";
+        String answer = enterInput("Please enter the details for the " + action + "\n" +
+                "Date and Time will default to current if not set.\n" +
+                "Would you like to set a Date and Time?");
 
-        String description = enterInput(message);
+        LocalDate date = LocalDate.now();
+        LocalTime time = LocalTime.now();
+
+        if (answer.equalsIgnoreCase("yes")) {
+            date = validateDate("Please enter a date in format (YYYY-MM-DD): ");
+            time = validateTime("Please enter a time in format (HH:MM:SS): ");
+        }
+
+        String description = enterInput("Description: ");
 
         String vendor = enterInput("Vendor name: ");
 
-        System.out.println("Amount: ");
-        float amount = scanner.nextFloat();
-        scanner.nextLine();
+        float amount = 0;
+        boolean valid = false;
+
+        while (!valid) {
+            try {
+                System.out.println("Amount: ");
+                amount = scanner.nextFloat();
+                valid = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+            } finally {
+                scanner.nextLine();
+            }
+        }
 
         if (!deposit) {
             amount *= -1;
         }
 
-        Transaction t = new Transaction(LocalDate.now(), LocalTime.now(), description, vendor, amount);
+        Transaction t = new Transaction(date, time, description, vendor, amount);
         ledger.add(t);
 
         try {
             FileWriter writer = new FileWriter("transactions.csv", true);
             BufferedWriter bufferedWriter = new BufferedWriter(writer);
             bufferedWriter.newLine();
-            bufferedWriter.write(LocalDate.now().toString() + "|" + LocalTime.now().format(formatter) + "|" + description + "|" + vendor + "|" + amount);
+            bufferedWriter.write(date.toString() + "|" + time.format(formatter) + "|" + description + "|" + vendor + "|" + amount);
             bufferedWriter.close();
         } catch (Exception e) {
             System.out.println("Error writing to file!");
             e.printStackTrace();
         }
+    }
+
+    static LocalDate validateDate(String message) {
+        boolean valid = false;
+        LocalDate date = LocalDate.now();
+
+        while (!valid) {
+            try {
+                date = LocalDate.parse(enterInput(message));
+                valid = true;
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid input. Please enter a valid date in format (YYYY-MM-DD)");
+            }
+        }
+        return date;
+    }
+
+    static LocalTime validateTime(String message) {
+        boolean valid = false;
+        LocalTime time = LocalTime.now();
+
+        while (!valid) {
+            try {
+                time = LocalTime.parse(enterInput(message));
+                valid = true;
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid input. Please enter a valid time in format (HH:MM:SS)");
+            }
+        }
+        return time;
     }
 
     // Ledger Methods
