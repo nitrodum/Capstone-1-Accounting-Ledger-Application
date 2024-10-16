@@ -121,7 +121,7 @@ public class AccountingLedger {
 
         switch (input) {
             case "1":
-                LocalDate monthToDate = LocalDate.now().minusMonths(1);
+                LocalDate monthToDate = LocalDate.now().minusDays(LocalDate.now().getDayOfMonth());
                 ArrayList<Transaction> monthToDateReport = filterSinceDate(monthToDate);
                 display(monthToDateReport);
                 break;
@@ -129,7 +129,7 @@ public class AccountingLedger {
                 filterPrevious(false);
                 break;
             case "3":
-                LocalDate yearToDate = LocalDate.now().minusYears(1);
+                LocalDate yearToDate = LocalDate.now().minusDays(LocalDate.now().getDayOfYear());
                 ArrayList<Transaction> yearToDateReport = filterSinceDate(yearToDate);
                 display(yearToDateReport);
                 break;
