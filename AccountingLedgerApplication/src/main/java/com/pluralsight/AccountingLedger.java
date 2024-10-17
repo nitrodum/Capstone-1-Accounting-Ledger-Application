@@ -13,7 +13,7 @@ public class AccountingLedger {
     private static boolean running = true;
 
     public static void main(String[] args) {
-        ledger = FileManager.loadLedger();
+        balance = FileManager.loadLedger(ledger);
         while (running) {
             running = UI.homeScreen(balance);
         }

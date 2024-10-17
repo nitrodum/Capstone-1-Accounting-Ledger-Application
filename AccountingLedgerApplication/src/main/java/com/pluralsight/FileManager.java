@@ -13,8 +13,8 @@ public class FileManager {
     private static final String readFile = "transactions.csv";
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    public static ArrayList<Transaction> loadLedger() {
-        ArrayList<Transaction> ledger = new ArrayList<>();
+    public static float loadLedger(ArrayList<Transaction> ledger) {
+        float balance = 0;
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(readFile));
             String input = bufferedReader.readLine();
@@ -23,12 +23,13 @@ public class FileManager {
                 String[] data = input.split("\\|");
                 Transaction t = new Transaction(LocalDate.parse(data[0]), LocalTime.parse(data[1]), data[2], data[3], Float.parseFloat(data[4]));
                 ledger.add(t);
+                balance += t.getAmount();
             }
         } catch (Exception e) {
             System.out.println("Error reading file!");
             e.printStackTrace();
         }
-        return ledger;
+        return balance;
     }
 
     public static void saveTransaction(Transaction t) {
