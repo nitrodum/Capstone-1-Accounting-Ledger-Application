@@ -17,6 +17,7 @@ public class AccountingLedger {
     private static ArrayList<Transaction> ledger = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private static float balance = 0f;
     private static boolean running = true;
     private static boolean runLedger;
     private static boolean runReport;
@@ -33,7 +34,7 @@ public class AccountingLedger {
     static void homeScreen() {
         String input = enterInput(
                 "------------------------------------------------------------------------------------------------------------------------\n" +
-                        "Welcome to your account!\n" +
+                        "Welcome to your account! Your current balance is: " + String.format("$%.2f", balance) + "\n" +
                         "Please enter the letter corresponding to the command you would like to perform.\n" +
                         "D) Add Deposit\n" +
                         "P) Make Payment\n" +
@@ -198,7 +199,11 @@ public class AccountingLedger {
             try {
                 System.out.println("Amount: ");
                 amount = scanner.nextFloat();
-                valid = true;
+                if (deposit || amount < balance) {
+                    valid = true;
+                } else {
+                    System.out.println("Insufficient funds for this payment");
+                }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a valid number.");
             } finally {
@@ -212,6 +217,7 @@ public class AccountingLedger {
 
         Transaction t = new Transaction(date, time, description, vendor, amount);
         ledger.add(t);
+        balance += t.getAmount();
 
         try {
             FileWriter writer = new FileWriter("transactions.csv", true);
@@ -419,6 +425,7 @@ public class AccountingLedger {
                 String[] data = input.split("\\|");
                 Transaction t = new Transaction(LocalDate.parse(data[0]), LocalTime.parse(data[1]), data[2], data[3], Float.parseFloat(data[4]));
                 ledger.add(t);
+                balance += t.getAmount();
             }
         } catch (Exception e) {
             System.out.println("Error reading file!");
