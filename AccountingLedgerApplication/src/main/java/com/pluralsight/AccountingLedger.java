@@ -33,14 +33,15 @@ public class AccountingLedger {
     // Menus
     static void homeScreen() {
         String input = enterInput(
-                "------------------------------------------------------------------------------------------------------------------------\n" +
+                        "Home\n" +
+                        "========================================================================================================================\n" +
                         "Welcome to your account! Your current balance is: " + String.format("$%.2f", balance) + "\n" +
                         "Please enter the letter corresponding to the command you would like to perform.\n" +
                         "D) Add Deposit\n" +
                         "P) Make Payment\n" +
                         "L) View Ledger\n" +
                         "X) Exit\n" +
-                        "------------------------------------------------------------------------------------------------------------------------").toUpperCase();
+                        "========================================================================================================================").toUpperCase();
 
         switch (input) {
             case "D":
@@ -61,14 +62,15 @@ public class AccountingLedger {
                 running = false;
                 return;
             default:
-                System.out.println("Invalid Option");
+                System.out.println("Invalid option. Please select a valid option from the menu.");
         }
         buffer();
     }
 
     static void ledgerScreen() {
         String input = enterInput(
-                "------------------------------------------------------------------------------------------------------------------------\n" +
+                        "Ledger\n" +
+                        "========================================================================================================================\n" +
                         "Welcome to your ledger!\n" +
                         "Please enter the letter corresponding to the command you would like to perform.\n" +
                         "A) Display All Transactions\n" +
@@ -76,7 +78,7 @@ public class AccountingLedger {
                         "P) Display All Payments\n" +
                         "R) View Reports\n" +
                         "H) Return to Home Screen\n" +
-                        "------------------------------------------------------------------------------------------------------------------------\n").toUpperCase();
+                        "========================================================================================================================").toUpperCase();
 
         switch (input) {
             case "A":
@@ -104,14 +106,15 @@ public class AccountingLedger {
                 runLedger = false;
                 return;
             default:
-                System.out.println("Invalid Option");
+                System.out.println("Invalid option. Please select a valid option from the menu.");
         }
         buffer();
     }
 
     static void reportScreen() {
         String input = enterInput(
-                "------------------------------------------------------------------------------------------------------------------------\n" +
+                        "Reports\n" +
+                        "========================================================================================================================\n" +
                         "Welcome to your reports!\n" +
                         "Please enter the number corresponding to the command you would like to perform.\n" +
                         "1) Month To Date\n" +
@@ -121,7 +124,7 @@ public class AccountingLedger {
                         "5) Search by Vendor\n" +
                         "6) Custom Search\n" +
                         "0) Return to Ledger\n" +
-                        "------------------------------------------------------------------------------------------------------------------------\n");
+                        "========================================================================================================================");
 
         switch (input) {
             case "1":
@@ -160,7 +163,7 @@ public class AccountingLedger {
                 runReport = false;
                 return;
             default:
-                System.out.println("Invalid Option");
+                System.out.println("Invalid option. Please select a valid option from the menu.");
         }
         buffer();
     }
@@ -229,6 +232,7 @@ public class AccountingLedger {
             System.out.println("Error writing to file!");
             e.printStackTrace();
         }
+        System.out.println("Transaction added successfully!");
     }
 
     static LocalDate validateDate(String message) {
@@ -278,13 +282,13 @@ public class AccountingLedger {
 
     // Report Methods
     static ArrayList<Transaction> filterSinceDate(LocalDate limit) {
-        ArrayList<Transaction> filteredToDate = new ArrayList<>();
+        ArrayList<Transaction> filteredSinceDate = new ArrayList<>();
         for (Transaction t : ledger) {
             if (t.getDate().isAfter(limit)) {
-                filteredToDate.add(t);
+                filteredSinceDate.add(t);
             }
         }
-        return filteredToDate;
+        return filteredSinceDate;
     }
 
     static ArrayList<Transaction> filterToDate(LocalDate limit, ArrayList<Transaction> toFilter) {
@@ -399,9 +403,14 @@ public class AccountingLedger {
 
     // Helper Methods
     static void display(ArrayList<Transaction> toDisplay) {
+        System.out.println(
+                "Date       | Time     | Description          | Amount    | Vendor\n" +
+                "--------------------------------------------------------------------------");
         for (Transaction t : toDisplay) {
-            System.out.println("Date: " + t.getDate() + " Time: " + t.getTime().format(formatter) + " Description: " + t.getDescription() + " Vendor: " + t.getVendor() + " Amount: " + t.getAmount());
+            System.out.printf("%-10s | %-8s | %-20s | %9.2f | %-15s\n",
+                    t.getDate(), t.getTime().format(formatter), t.getDescription(), t.getAmount(), t.getVendor());
         }
+        System.out.println();
     }
 
     static void graph(ArrayList<Transaction> toDraw) {
@@ -413,7 +422,6 @@ public class AccountingLedger {
 
     static void buffer() {
         enterInput("Enter any button to continue");
-
     }
 
     static void loadLedger() {
