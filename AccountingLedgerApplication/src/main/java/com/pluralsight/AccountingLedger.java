@@ -80,22 +80,17 @@ public class AccountingLedger {
         switch (input) {
             case "A":
                 display(ledger);
-                String drawLedger = enterInput("Would you like to visualize this data? (yes/no)");
-                if (drawLedger.equalsIgnoreCase("yes")) {
-                    Graph.drawGraph(ledger);
-                }
+                graph(ledger);
                 break;
             case "D":
                 ArrayList<Transaction> deposits = filterTransactions(true);
                 display(deposits);
-                String drawDeposits = enterInput("Would you like to visualize this data? (yes/no)");
-                if (drawDeposits.equalsIgnoreCase("yes")) {
-                    Graph.drawGraph(deposits);
-                }
+                graph(deposits);
                 break;
             case "P":
                 ArrayList<Transaction> payments = filterTransactions(false);
                 display(payments);
+                graph(payments);
                 break;
             case "R":
                 runReport = true;
@@ -132,17 +127,23 @@ public class AccountingLedger {
                 LocalDate monthToDate = LocalDate.now().minusDays(LocalDate.now().getDayOfMonth());
                 ArrayList<Transaction> monthToDateReport = filterSinceDate(monthToDate);
                 display(monthToDateReport);
+                graph(monthToDateReport);
                 break;
             case "2":
-                filterPrevious(false);
+                ArrayList<Transaction> previousMonth = filterPrevious(false);
+                display(previousMonth);
+                graph(previousMonth);
                 break;
             case "3":
                 LocalDate yearToDate = LocalDate.now().minusDays(LocalDate.now().getDayOfYear());
                 ArrayList<Transaction> yearToDateReport = filterSinceDate(yearToDate);
                 display(yearToDateReport);
+                graph(yearToDateReport);
                 break;
             case "4":
-                filterPrevious(true);
+                ArrayList<Transaction> previousYear = filterPrevious(true);
+                display(previousYear);
+                graph(previousYear);
                 break;
             case "5":
                 String vendor = enterInput("Enter the vendor name that you would like to search for.\n");
@@ -290,7 +291,7 @@ public class AccountingLedger {
         return filteredToDate;
     }
 
-    static void filterPrevious(boolean filterPreviousYear) {
+    static ArrayList<Transaction> filterPrevious(boolean filterPreviousYear) {
         int previousMonth = LocalDate.now().minusMonths(1).getMonthValue();
 
         // Adjust yearComparison to previous year if filterPreviousYear is true or if the current month is January
@@ -301,7 +302,7 @@ public class AccountingLedger {
             yearComparison = LocalDate.now().getYear();
         }
 
-        ArrayList<Transaction> filteredPreviousMonth = new ArrayList<>();
+        ArrayList<Transaction> filtered = new ArrayList<>();
 
         // Filter the transactions based on the adjusted year and month
         for (Transaction t : ledger) {
@@ -309,11 +310,11 @@ public class AccountingLedger {
                 // If filtering by previous year, include all transactions from that year
                 // Otherwise, only include transactions from the previous month
                 if (filterPreviousYear || (t.getDate().getMonthValue() == previousMonth)) {
-                    filteredPreviousMonth.add(t);
+                    filtered.add(t);
                 }
             }
         }
-        display(filteredPreviousMonth);
+        return filtered;
     }
 
     static ArrayList<Transaction> filterVendor(String vendor, ArrayList<Transaction> toFilter) {
@@ -394,6 +395,13 @@ public class AccountingLedger {
     static void display(ArrayList<Transaction> toDisplay) {
         for (Transaction t : toDisplay) {
             System.out.println("Date: " + t.getDate() + " Time: " + t.getTime().format(formatter) + " Description: " + t.getDescription() + " Vendor: " + t.getVendor() + " Amount: " + t.getAmount());
+        }
+    }
+
+    static void graph(ArrayList<Transaction> toDraw) {
+        String draw = enterInput("Would you like to visualize this data? (yes/no)");
+        if (draw.equalsIgnoreCase("yes")) {
+            Graph.drawGraph(toDraw);
         }
     }
 

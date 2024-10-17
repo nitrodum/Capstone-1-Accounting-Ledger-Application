@@ -15,18 +15,23 @@ public class Graph {
 
         for (Transaction t : ledger) {
             total += t.getAmount();
-            max = Math.max(max, total);
+            max = Math.max(max, Math.abs(total));
             plots.put(t.getDate(), total);
         }
 
         System.out.println("------------------------------------------------------------------------------------------------------------------------");
         for (LocalDate key : plots.keySet()) {
-            float y = plots.get(key);
+            float amount = plots.get(key);
 
-            int plot = (int) ((y/max) * 100);
+            int plot;
+            if (max == 0) {
+                plot = 0;
+            } else {
+            plot = (int) ((Math.abs(amount) / max) * 100);
+            }
             String line = "*".repeat(plot);
 
-            System.out.printf("%s | %s (%.2f)\n", key.toString(), line, y);
+            System.out.printf("%s | %s (%.2f)\n", key.toString(), line, amount);
         }
     }
 }
