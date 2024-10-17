@@ -29,7 +29,12 @@ public class Graph {
             } else {
             plot = (int) ((Math.abs(amount) / max) * 100);
             }
-            String line = "*".repeat(plot);
+            String line;
+            if (amount > 0) {
+                line = "*".repeat(plot);
+            } else {
+                line = "-".repeat(plot);
+            }
 
             System.out.printf("%s | %s (%.2f)\n", key.toString(), line, amount);
         }
