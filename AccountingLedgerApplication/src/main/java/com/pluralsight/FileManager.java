@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class FileManager {
     private static final String readFile = "transactions.csv";
-    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     public static float loadLedger(ArrayList<Transaction> ledger) {
         float balance = 0;

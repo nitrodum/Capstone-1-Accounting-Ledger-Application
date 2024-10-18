@@ -9,9 +9,8 @@ import java.util.Comparator;
 import java.util.Scanner;
 
 public class UI {
-    private static Scanner scanner = new Scanner(System.in);
-    private static boolean running = true;
-    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static boolean runLedger;
     private static boolean runReport;
 
@@ -42,13 +41,12 @@ public class UI {
                 break;
             case "X":
                 System.out.println("Thank you for using our app!");
-                running = false;
-                return running;
+                return false;
             default:
                 System.out.println("Invalid option. Please select a valid option from the menu.");
         }
         buffer();
-        return running;
+        return true;
     }
 
     static void ledgerScreen(ArrayList<Transaction> ledger) {

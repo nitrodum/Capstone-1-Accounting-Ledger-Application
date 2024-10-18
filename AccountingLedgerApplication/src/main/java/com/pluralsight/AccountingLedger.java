@@ -7,8 +7,8 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class AccountingLedger {
-    private static ArrayList<Transaction> ledger = new ArrayList<>();
-    private static Scanner scanner = new Scanner(System.in);
+    private static final ArrayList<Transaction> ledger = new ArrayList<>();
+    private static final Scanner scanner = new Scanner(System.in);
     private static float balance = 0f;
     private static boolean running = true;
 
@@ -79,9 +79,9 @@ public class AccountingLedger {
         return ledger;
     }
 
-    static void testLedger() {
-        for (Transaction t : ledger) {
-            System.out.println("Date: " + t.getDate() + " Time: " + t.getTime() + " Description: " + t.getDescription() + " Vendor: " + t.getVendor() + " Amount: " + t.getAmount());
-        }
-    }
+//    static void testLedger() {
+//        for (Transaction t : ledger) {
+//            System.out.println("Date: " + t.getDate() + " Time: " + t.getTime() + " Description: " + t.getDescription() + " Vendor: " + t.getVendor() + " Amount: " + t.getAmount());
+//        }
+//    }
 }
