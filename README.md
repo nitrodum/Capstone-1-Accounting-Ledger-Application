@@ -4,6 +4,11 @@ This is an accounting ledger application made in Java that allows users to track
 The application reads from a CSV file to load transactions and transactions added will be saved to this CSV file to allow
 for data storage between sessions. This application allows for users to add deposits, add payments, or view their transactions.
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+
 ## Installation
 
 To install the application follow these steps:
@@ -85,3 +90,5 @@ To install the application follow these steps:
     - The balance is required to stay positive, but on smaller time frames, (i.e. for previous month) the balance can be negative for that time frame.
     - A positive balance will be displayed with "*" filling the bar and a negative balance will be displayed with "-" filling the bar.
    ![Negative Example](Images/DataVisualizationNegativeExample.png)
+
+[Back To Top](#accounting-ledger-application)
