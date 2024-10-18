@@ -16,9 +16,9 @@ public class Filter {
     }
 
     // Report Methods
-    static ArrayList<Transaction> filterSinceDate(LocalDate limit) {
+    static ArrayList<Transaction> filterSinceDate(LocalDate limit, ArrayList<Transaction> toFilter) {
         ArrayList<Transaction> filteredSinceDate = new ArrayList<>();
-        for (Transaction t : AccountingLedger.getLedger()) {
+        for (Transaction t : toFilter) {
             if (t.getDate().isAfter(limit)) {
                 filteredSinceDate.add(t);
             }
@@ -97,22 +97,22 @@ public class Filter {
 
         LocalDate startDate = UI.validateDate("Enter the start date:");
         if (startDate != null) {
-            custom = filterSinceDate(startDate);
+            custom = filterSinceDate(startDate, custom);
         }
 
         LocalDate endDate = UI.validateDate("Enter the end date:");
         if (endDate != null) {
-            custom = filterToDate(endDate, AccountingLedger.getLedger());
+            custom = filterToDate(endDate, custom);
         }
 
         String description = UI.enterInput("Enter the description:");
         if (!description.isEmpty()) {
-            custom = filterDescription(description, AccountingLedger.getLedger());
+            custom = filterDescription(description, custom);
         }
 
         String vendor = UI.enterInput("Enter the vendor name:");
         if (!vendor.isEmpty()) {
-            custom = filterVendor(vendor, AccountingLedger.getLedger());
+            custom = filterVendor(vendor, custom);
         }
 
         boolean valid = false;
@@ -125,7 +125,7 @@ public class Filter {
             } else {
                 try {
                     float parsedAmount = Float.parseFloat(amount);
-                    custom = filterAmount(parsedAmount, AccountingLedger.getLedger());
+                    custom = filterAmount(parsedAmount, custom);
                     valid = true;
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid amount. Please enter a valid number.");

@@ -120,7 +120,7 @@ public class UI {
         switch (input) {
             case "1":
                 LocalDate monthToDate = LocalDate.now().minusDays(LocalDate.now().getDayOfMonth());
-                ArrayList<Transaction> monthToDateReport = Filter.filterSinceDate(monthToDate);
+                ArrayList<Transaction> monthToDateReport = Filter.filterSinceDate(monthToDate, AccountingLedger.getLedger());
                 System.out.println("Month to Date\n" +
                         "========================================================================================================================");
                 display(monthToDateReport);
@@ -135,7 +135,7 @@ public class UI {
                 break;
             case "3":
                 LocalDate yearToDate = LocalDate.now().minusDays(LocalDate.now().getDayOfYear());
-                ArrayList<Transaction> yearToDateReport = Filter.filterSinceDate(yearToDate);
+                ArrayList<Transaction> yearToDateReport = Filter.filterSinceDate(yearToDate, AccountingLedger.getLedger());
                 System.out.println("Year to Date\n" +
                         "========================================================================================================================");
                 display(yearToDateReport);
