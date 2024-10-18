@@ -68,4 +68,20 @@ To install the application follow these steps:
    
     #### All Deposits:
     - Entering D on the ledger screen will allow the user to view all deposits.
-3)
+
+   #### All Payments:
+    - Entering P on the ledger screen will allow the user to view all payments.
+   
+3) ### Reports Screen
+
+    - The report screen allows users to filter and view transactions.
+    ![ReportsScreen](Images/ReportsScreen.png)
+   
+4) ### Data Visualization
+    
+    - When viewing transactions, the user is prompted after getting the specified transactions if they want to visualize the data.
+    - If the user enters yes, a bar graph will be displayed, with the dates being the y-axis and the cumulative total of the balance being displayed as the x-axis.
+   ![Data Visualization](Images/DataVisualizationExample.png)
+    - The balance is required to stay positive, but on smaller time frames, (i.e. for previous month) the balance can be negative for that time frame.
+    - A positive balance will be displayed with "*" filling the bar and a negative balance will be displayed with "-" filling the bar.
+   ![Negative Example](Images/DataVisualizationNegativeExample.png)
