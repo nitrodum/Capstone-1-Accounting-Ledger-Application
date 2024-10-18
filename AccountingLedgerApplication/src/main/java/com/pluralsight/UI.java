@@ -67,15 +67,21 @@ public class UI {
 
         switch (input) {
             case "A":
+                System.out.println("All Transactions\n" +
+                        "========================================================================================================================");
                 display(AccountingLedger.getLedger());
                 graph(AccountingLedger.getLedger());
                 break;
             case "D":
+                System.out.println("Deposits\n" +
+                        "========================================================================================================================");
                 ArrayList<Transaction> deposits = Filter.filterTransactions(true);
                 display(deposits);
                 graph(deposits);
                 break;
             case "P":
+                System.out.println("Payments\n" +
+                        "========================================================================================================================");
                 ArrayList<Transaction> payments = Filter.filterTransactions(false);
                 display(payments);
                 graph(payments);
@@ -115,32 +121,44 @@ public class UI {
             case "1":
                 LocalDate monthToDate = LocalDate.now().minusDays(LocalDate.now().getDayOfMonth());
                 ArrayList<Transaction> monthToDateReport = Filter.filterSinceDate(monthToDate);
+                System.out.println("Month to Date\n" +
+                        "========================================================================================================================");
                 display(monthToDateReport);
                 graph(monthToDateReport);
                 break;
             case "2":
                 ArrayList<Transaction> previousMonth = Filter.filterPrevious(false);
+                System.out.println("Previous Month\n" +
+                        "========================================================================================================================");
                 display(previousMonth);
                 graph(previousMonth);
                 break;
             case "3":
                 LocalDate yearToDate = LocalDate.now().minusDays(LocalDate.now().getDayOfYear());
                 ArrayList<Transaction> yearToDateReport = Filter.filterSinceDate(yearToDate);
+                System.out.println("Year to Date\n" +
+                        "========================================================================================================================");
                 display(yearToDateReport);
                 graph(yearToDateReport);
                 break;
             case "4":
                 ArrayList<Transaction> previousYear = Filter.filterPrevious(true);
+                System.out.println("Previous Year\n" +
+                        "========================================================================================================================");
                 display(previousYear);
                 graph(previousYear);
                 break;
             case "5":
                 String vendor = enterInput("Enter the vendor name that you would like to search for.\n");
                 ArrayList<Transaction> filteredByVendor = Filter.filterVendor(vendor, AccountingLedger.getLedger());
+                System.out.println("Search by Vendor\n" +
+                        "========================================================================================================================");
                 display(filteredByVendor);
                 break;
             case "6":
                 ArrayList<Transaction> search = Filter.customSearch();
+                System.out.println("Custom Search\n" +
+                        "========================================================================================================================");
                 display(search);
                 break;
             case "0":
